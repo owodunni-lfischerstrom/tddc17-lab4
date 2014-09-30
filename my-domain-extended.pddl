@@ -1,10 +1,13 @@
 
-;; This is a plain STRIPS formulation of the standard Logistics domain.
+;; This is a plain STRIPS formulation of our modified Logistics domain.
 
-;; In this domain, there are six different types of objects: "object"
-;; (the packages to be transported), "truck", "airplane" and their
-;; common supertype "vehicle", "location" and the subtype "airport",
-;; and finally "city". Types are defined by static (in the sense that
+;; In this domain, there are different types of objects: "small-object",
+;; "medium-object" or  "large-object" (the packages to be transported), 
+;; "truck", "airplane", "train" and their common supertypes 
+;; "small-vehicle", "medium-vehicle" and "large-vehicle", 
+;; "location" and the subtypes "airport" and "trainstation",
+;; and finally "city" as well as "railway". "railway" is used to connect 
+;; trainstations. Types are defined by static (in the sense that
 ;; there are no operators that change their truth value) unary predicates.
 ;; The types of objects in a problem instance must be defined by including
 ;; the appropriate typing predicates in the initial state.
@@ -32,9 +35,12 @@
    )
 
   ;; Actions for loading and unloading packages.
-  ;; By declaring all trucks and airplanes to be also "vehicle", we
-  ;; can use the same load/unload operator for both (otherwise we
+  ;; By declaring all trucks airplanes and trains to be also 
+  ;; "small-vehicle", "medium-vehicle" or "large-vehicle", we
+  ;; can use the same load/unload operator for all (otherwise we
   ;; would need one for each subtype of vehicle).
+  ;; The load action makes sure so that the packadge and vehicle 
+  ;; are compatible.
   (:action load
     :parameters (?o ?v ?l)
     :precondition (and
@@ -97,7 +103,7 @@
 		       (at ?p ?a1))
     :effect (and (at ?p ?a2) (not (at ?p ?a1))))
 
-  ;; Train goes between two train stations
+  ;; Train goes between two train stations that have a connected railway
   (:action ride
     :parameters (?tr ?ts1 ?ts2)
     :precondition (and (train ?tr) (trainstation ?ts1) (trainstation ?ts2)
